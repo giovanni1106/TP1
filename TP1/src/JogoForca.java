@@ -79,7 +79,7 @@ public class JogoForca {
 					if (matrizGeral[a][0].equals(tema) == true)
 						return 1; // Tema ja existe
 				} else if (validador == 1) {
-					matrizGeral[a][0] = tema;
+					matrizGeral[a][0] = tema.toUpperCase();
 					validador = 0;
 				} else if (a == MAX - 2 && validador == 1) {
 					return 2; // Limite de temas excedido
@@ -94,7 +94,7 @@ public class JogoForca {
 					if (matrizGeral[cont][j].equals(palavra) == true)
 						return 1; // Palavra ja existe
 				} else if (validador == 1) {
-					matrizGeral[cont][j] = palavra;
+					matrizGeral[cont][j] = palavra.toUpperCase();
 					validador = 0;
 				} else if (j == MAX - 2 && validador == 1) {
 					return 2; // Limite de palavras excedido
@@ -160,9 +160,9 @@ public class JogoForca {
 			for (int a = 0; a < MAX - 1; a++)
 				for (int j = 0; j < MAX - 1; j++)
 					if (matrizGeral[a][j] != null) {
-						if (a != 0 && matrizGeral[a][j].equals(palavra) == true) {
-							System.out.print(
-									" A palavra " + palavra + " está cadastrada no tema " + matrizGeral[a][0] + "! \n");
+						if (j != 0 && matrizGeral[a][j].equals(palavra) == true) {
+							System.out.print("  A palavra " + palavra + " está cadastrada no tema " + matrizGeral[a][0]
+									+ "! \n");
 							validador = 0;
 							return 0;
 						}
@@ -174,16 +174,17 @@ public class JogoForca {
 
 // ---------------------------------------------------------------------
 		case 8: { // Escolher uma palavra aleatória
-			Random gerador = new Random();
+			Random random = new Random();
 			int totalPalavras = 0;
-			int escolhida = 0;
 
 			for (int j = 1; j < MAX - 1; j++)
 				if (matrizGeral[cont][j] != null)
 					totalPalavras = totalPalavras + 1;
 
 			if (totalPalavras != 0) {
-				escolhida = gerador.nextInt(totalPalavras);
+				int escolhida = random.nextInt(totalPalavras);
+				if (escolhida == 0)
+					escolhida = escolhida + 1;
 				return escolhida;
 			} else {
 				return -1; // Não existem palavras cadastradas nesse tema
@@ -259,7 +260,7 @@ public class JogoForca {
 		tema = ler.next();
 		System.out.print("\n");
 
-		switch (BancoDados(1, 0, tema, null)) {
+		switch (BancoDados(1, 0, tema.toUpperCase(), null)) {
 		case 0:
 			System.out.print("  Tema cadastrado com sucesso!\n ");
 			break;
@@ -276,7 +277,6 @@ public class JogoForca {
 	// EXCLUIR TEMA
 	public static void Opcao12() {
 		Scanner ler = new Scanner(System.in);
-		String palavra;
 		int escolha;
 
 		System.out.print("=================================================\n\n");
@@ -321,10 +321,10 @@ public class JogoForca {
 			tema = ler.next();
 			System.out.print("\n");
 
-			switch (BancoDados(5, 0, tema, null)) {
+			switch (BancoDados(5, 0, tema.toUpperCase(), null)) {
 			case 0:
 				while (validador == 0) {
-					System.out.print("\n  Deseja buscar novamente? \n\n ");
+					System.out.print("\n\n  Deseja buscar novamente? \n\n ");
 					System.out.print("  1- Sim \n ");
 					System.out.print("  2- Não \n\n ");
 					System.out.print("  R:  ");
@@ -424,7 +424,7 @@ public class JogoForca {
 			palavra = ler.next();
 			System.out.print("\n");
 
-			switch (BancoDados(2, escolha, null, palavra)) {
+			switch (BancoDados(2, escolha, null, palavra.toUpperCase())) {
 			case 0:
 				System.out.print("  Palavra cadastrado com sucesso!\n ");
 				break;
@@ -466,7 +466,7 @@ public class JogoForca {
 			palavra = ler.next();
 			System.out.print("\n");
 
-			switch (BancoDados(2, escolha, null, palavra)) {
+			switch (BancoDados(2, escolha, null, palavra.toUpperCase())) {
 			case 0:
 				System.out.print("  Palavra cadastrado com sucesso!\n ");
 				break;
@@ -502,7 +502,7 @@ public class JogoForca {
 			palavra = ler.next();
 			System.out.print("\n");
 
-			switch (BancoDados(7, 0, null, palavra)) {
+			switch (BancoDados(7, 0, null, palavra.toUpperCase())) {
 			case 0:
 				while (validador == 0) {
 					System.out.print("\n  Deseja buscar novamente? \n\n ");
@@ -541,7 +541,6 @@ public class JogoForca {
 
 	// JOGAR
 	public static int Opcao3() {
-		int repeat = 0;
 		int tema;
 		int palavra;
 
@@ -579,32 +578,35 @@ public class JogoForca {
 		return 0;
 	}
 
+	// JOGAR - CONTINUAÇÃO
 	public static void Opcao31(int palavra, int tema) {
-		String escolhida = matrizGeral[tema][palavra];
-		String[] escolhida1 = escolhida.split("(?!^)");
+		Scanner ler = new Scanner(System.in);
+		String palavraChave = matrizGeral[tema][palavra];
+		int tamString = palavraChave.length();
+		String palavraAdivinhada = "";
 
-		System.out.print(" Escolhida: " + escolhida + "\n" + "Escolhida1 :" + escolhida1 + "\n");
-		
-		int tamString = escolhida.length();
-		char[] comparador = new char[tamString];
-		char[] letrasEscolhidas = new char[MAX];
+		int escolha = 0;
 
 		for (int i = 0; i < tamString; i++)
-			comparador[i] = '_';
+			palavraAdivinhada += "_";
+
+		// System.out.print(" Escolhida: " + escolhida + "\n" + "Escolhida1 :" +
+		// escolhida1 + "\n");
+
+		char[] letrasEscolhidas = new char[MAX];
+		String letrasUsadas = "";
 
 		int tentativas = 0;
-		int cont = 0;
 		int erros = 0;
-		int acerto = 0;
 		int ganhou = 0;
 
 		char letra;
 
-		while (erros < 5 || ganhou != 1) {
+		while (erros < 5 && ganhou != 1) {
 			tentativas = tentativas + 1;
 			System.out.print("=================================================\n\n");
 			System.out.print("                     " + matrizGeral[tema][0] + "\n");
-			System.out.print(" Erros: " + erros);
+			System.out.print(" Erros: " + erros + " \\ 5\n");
 			System.out.print("-------------------------------------------------\n\n");
 
 			switch (erros) {
@@ -628,57 +630,83 @@ public class JogoForca {
 				Boneco5();
 			}
 				break;
-			case 5: {
-				Boneco6();
-			}
-				break;
 			}
 
-			System.out.print(comparador);
+			for (int i = 0; i < (tamString * 2); i++)
+				if (i == 0)
+					System.out.print(palavraAdivinhada.charAt(i));
+				else if (i % 2 == 0)
+					System.out.print(palavraAdivinhada.charAt(i / 2));
+				else
+					System.out.print("  ");
 
 			System.out.print("\n\n =================================================\n");
 			System.out.print(" Letras escolhidas: ");
 
-			for (int i = 0; i < MAX - 1; i++) 
+			for (int i = 0; i < MAX - 1; i++)
 				System.out.print(letrasEscolhidas[i] + " ");
 
 			System.out.print("\n-------------------------------------------------\n\n");
-			if (comparador.equals(escolhida) == true) {
+			if (palavraChave.equals(palavraAdivinhada) == true) {
 				ganhou = 1;
 			} else {
 				System.out.print(" Escolha uma letra: ");
-				Scanner ler = new Scanner(System.in);
 				letra = ler.next().charAt(0);
+				letra = Character.toUpperCase(letra);
 				letrasEscolhidas[tentativas] = letra;
 
-				for (int i = 0; i < tamString; i++) {
-					cont = cont + 1;
-					if (escolhida1[i].equals(letra) == true) {
-						comparador[i] = letra;
-						acerto = 1;
-					} else if (i == tamString - 1 && acerto == 0) {
+				if (letrasUsadas.indexOf(letra) >= 0) {
+					// Ja usou essa letra
+				} else {
+					letrasUsadas += letra;
+
+					if (palavraChave.indexOf(letra) >= 0) {
+						palavraAdivinhada = "";
+
+						for (int i = 0; i < tamString; i++) {
+							if (letrasUsadas.indexOf(palavraChave.charAt(i)) >= 0) {
+								palavraAdivinhada += palavraChave.charAt(i);
+							} else
+								palavraAdivinhada += "_";
+						}
+					} else {
 						erros = erros + 1;
 					}
 				}
 			}
 		}
 
-		if (ganhou == 1) {
-			System.out.print(" Parabens!!!\n\n");
-			System.out.print(" Gostaria de jogar novamente?\n\n");
-			System.out.print(" 1- Sim!\n");
-			System.out.print(" 2- Não!\n\n");
-			System.out.print(" R: ");
+		int validador = 0;
+		while (validador == 0) {
+			try {
+				if (ganhou == 1) {
+					System.out.print(" Parabens!!!\n\n");
+					System.out.print(" Gostaria de jogar novamente?\n\n");
+					System.out.print(" 1- Sim!\n");
+					System.out.print(" 2- Não!\n\n");
+					System.out.print(" R: ");
+					escolha = ler.nextInt();
+				} else {
+					Boneco6();
+					System.out.print("\n Infelizmente você perdeu..... \n\n");
+					System.out.print(" Gostaria de jogar novamente?\n\n");
+					System.out.print(" 1- Sim!\n");
+					System.out.print(" 2- Não!\n\n");
+					System.out.print(" R: ");
+					escolha = ler.nextInt();
+				}
 
-		} else {
-			System.out.print(" Infelizmente você perdeu..... \n\n");
-			System.out.print(" Gostaria de jogar novamente?\n\n");
-			System.out.print(" 1- Sim!\n");
-			System.out.print(" 2- Não!\n\n");
-			System.out.print(" R: ");
+				validador = 1;
+			} catch (Exception erro) {
+				System.out.print(" Favor inserir um valor entre 1 e 2!");
+			}
 		}
+
+		if (escolha == 1)
+			Opcao3();
 	}
 
+	
 	// DESENHO DOS BONECOS
 	public static void Boneco1() {
 		System.out.print("\n\n");
@@ -698,11 +726,10 @@ public class JogoForca {
 		System.out.print(" /          |    \n");
 		System.out.print(" |          |    \n");
 		System.out.print(" |          O    \n");
-		System.out.print(" |           \n");
+		System.out.print(" |          | \n");
 		System.out.print(" |          \n");
 		System.out.print(" |\n");
 		System.out.print(" |     ");
-		System.out.print("================================================= \n\n");
 	}
 
 	public static void Boneco3() {
@@ -715,7 +742,6 @@ public class JogoForca {
 		System.out.print(" |          \n");
 		System.out.print(" |\n");
 		System.out.print(" |     ");
-		System.out.print("================================================= \n\n");
 	}
 
 	public static void Boneco4() {
@@ -728,7 +754,7 @@ public class JogoForca {
 		System.out.print(" |          \n");
 		System.out.print(" |\n");
 		System.out.print(" |     ");
-		System.out.print("================================================= \n\n");
+
 	}
 
 	public static void Boneco5() {
@@ -741,7 +767,6 @@ public class JogoForca {
 		System.out.print(" |         /   \n");
 		System.out.print(" |\n");
 		System.out.print(" |     ");
-		System.out.print("================================================= \n\n");
 	}
 
 	public static void Boneco6() {
@@ -754,6 +779,5 @@ public class JogoForca {
 		System.out.print(" |         / \\  \n");
 		System.out.print(" |\n");
 		System.out.print(" |     ");
-		System.out.print("================================================= \n\n");
 	}
 }
