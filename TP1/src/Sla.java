@@ -4,13 +4,11 @@ import java.util.Arrays;
 
 public class JogoForca {
 
-	public static int MAX = 51;
-	public static String[][] matrizGeral = new String[MAX][MAX];
+	public static int MAX = 52;
+	public static String[][] matrizGeral = new String[MAX][MAX + 1];
 
-	// ==============================================
-	// MENU
 	public static void main(String[] args) {
-		char escolha = 0;
+		int escolha = 0;
 		int repeat = 0;
 
 		Scanner ler = new Scanner(System.in);
@@ -19,44 +17,36 @@ public class JogoForca {
 			Menu();
 
 			do {
-				System.out.print(" Escolha uma opção(1-5): ");
-				escolha = ler.next().charAt(0);
+				System.out.print(" Escolha uma opção(1-4): ");
+				escolha = ler.nextInt();
 				System.out.print("\n");
 
 				switch (escolha) {
-				case '1':
+				case 1:
 					Opcao1();
 					repeat = 0;
 					break;
-				case '2':
+				case 2:
 					Opcao2();
 					repeat = 0;
 					break;
-				case '3':
+				case 3:
 					Opcao3();
 					repeat = 0;
 					break;
-				case '4':
+				case 4:
 					repeat = 0;
 					break;
-				case '5':
-					Opcao5();
-					repeat = 0;
-					break;
-				case 'T':
-					teste();
-					repeat = 0;
-					break;
-				case 'P':
-					print();
+				case 10:
+					Opcao10();
 					repeat = 0;
 					break;
 				default:
-					System.out.print(" Favor inserir uma opção entre 1 e 5!\n\n");
+					System.out.print(" Favor inserir uma opção entre 1 e 4!\n\n");
 					repeat = 1;
 				}
 			} while (repeat == 1);
-		} while (escolha != '4');
+		} while (escolha != 4);
 	}
 
 	public static void Menu() {
@@ -66,13 +56,13 @@ public class JogoForca {
 		System.out.print("  1- Gerenciar Temas\n");
 		System.out.print("  2- Gerenciar Palavras\n");
 		System.out.print("  3- Jogar\n");
-		System.out.print("  4- Sair\n");
-		System.out.print("  5- Abastecer o jogo com temas e palavras\n\n");
-		System.out.print("  Obs: A opção 5 ira substituir qualquer tema\n  cadastrado nas 10 primeiras posições\n");
+		System.out.print("  4- Sair\n\n");
+		System.out.print("  10- Abastecer o jogo com temas e palavras\n\n");
+		System.out.print(
+				"  Obs: A opção 10 ira substituir qualquer palavra\n  ou tema cadastrado nas 10 primeiras posições\n");
 		System.out.print("-------------------------------------------------\n\n");
 	}
 
-	// ==============================================
 	// REALIZA AS ALTERAÇÕES NA MATRIZ
 	public static int BancoDados(int escolha, int cont, String tema, String palavra) {
 		cont = cont - 1;
@@ -86,26 +76,26 @@ public class JogoForca {
 				if (matrizGeral[a][0] != null) {
 					if (matrizGeral[a][0].equals(tema) == true)
 						return 1; // Tema ja existe
-					if (a == MAX - 2 && validador == 1)
-						return 2; // Limite de temas excedido
 				} else if (validador == 1) {
 					matrizGeral[a][0] = tema.toUpperCase();
 					validador = 0;
+				} else if (a == MAX - 2 && validador == 1) {
+					return 2; // Limite de temas excedido
 				}
 			}
 		}
 			break;
 // ---------------------------------------------------------------------
 		case 2: { // Criar nova palavra
-			for (int j = 1; j < MAX; j++) {
+			for (int j = 1; j < MAX - 1; j++) {
 				if (matrizGeral[cont][j] != null) {
 					if (matrizGeral[cont][j].equals(palavra) == true)
 						return 1; // Palavra ja existe
-					if (j == MAX - 1 && validador == 1)
-						return 2; // Limite de palavras excedido
 				} else if (validador == 1) {
 					matrizGeral[cont][j] = palavra.toUpperCase();
 					validador = 0;
+				} else if (j == MAX - 2 && validador == 1) {
+					return 2; // Limite de palavras excedido
 				}
 			}
 		}
@@ -118,13 +108,11 @@ public class JogoForca {
 					System.out.print(" " + (a + 1) + "- " + matrizGeral[a][0] + "\n");
 				else {
 					if (a == 0)
-						return -1; // Nenhum tema cadastrado
-					else
-						return a;
+						return 3; // Nenhum tema cadastrado
 				}
 			}
-			return MAX - 1;
 		}
+			break;
 
 // ---------------------------------------------------------------------
 		case 4: { // Exclusão do tema escolhido
@@ -134,8 +122,8 @@ public class JogoForca {
 				return 4; // Existem palavras cadastradas nesse tema
 			}
 
-			for (int a = cont; a < MAX - 1; a++) {
-				for (int j = 0; j < MAX; j++) {
+			for (int a = cont; a < MAX - 2; a++) {
+				for (int j = 0; j < MAX - 1; j++) {
 					matrizGeral[a][j] = matrizGeral[a + 1][j];
 				}
 			}
@@ -151,20 +139,17 @@ public class JogoForca {
 					System.out.print(" " + matrizGeral[a][0] + "| ");
 					validador = 0;
 					for (int j = 1; j < MAX - 1; j++)
-						if (matrizGeral[a][j] != null)
-							System.out.print(" " + (j) + "- " + matrizGeral[a][j] + " / ");
+						System.out.print(" " + (j) + "- " + matrizGeral[a][j] + " / ");
 				}
 		}
 			break;
 
 // ---------------------------------------------------------------------
 		case 6: { // Excluir palavra
-			for (int j = 1; j < MAX; j++) {
-				if (matrizGeral[cont][j] != null)
-					if (matrizGeral[cont][j].equals(palavra) == true) {
-						matrizGeral[cont][j] = null;
-						for (; j < MAX; j++)
-							matrizGeral[cont][j] = matrizGeral[cont][j + 1];
+			for (int j = 1; j < MAX - 1; j++) {
+				if (matrizGeral[escolha][j] != null)
+					if (matrizGeral[escolha][j].equals(palavra) == true) {
+						matrizGeral[escolha][j] = null;
 						return 0;
 					}
 			}
@@ -174,14 +159,15 @@ public class JogoForca {
 // ---------------------------------------------------------------------			
 		case 7: { // Buscar palavra
 			for (int a = 0; a < MAX - 1; a++)
-				for (int j = 0; j < MAX; j++)
+				for (int j = 0; j < MAX - 1; j++)
 					if (matrizGeral[a][j] != null) {
 						if (j != 0 && matrizGeral[a][j].equals(palavra) == true) {
 							System.out.print("  A palavra " + palavra + " está cadastrada no tema " + matrizGeral[a][0]
 									+ "! \n");
 							validador = 0;
+							return 0;
 						}
-					} else if (matrizGeral[a][0] == null && validador != 0)
+					} else if (matrizGeral[a][0] == null)
 						return 6; // Palavra não encontrada
 
 		}
@@ -192,7 +178,7 @@ public class JogoForca {
 			Random random = new Random();
 			int totalPalavras = 0;
 
-			for (int j = 1; j < MAX; j++)
+			for (int j = 1; j < MAX - 1; j++)
 				if (matrizGeral[cont][j] != null)
 					totalPalavras = totalPalavras + 1;
 
@@ -217,11 +203,10 @@ public class JogoForca {
 		return 0; // Tudo ocorreu perfeitamente!
 	}
 
-	// ==============================================
 	// GERENCIAR TEMAS
 	public static int Opcao1() {
 		int repeat = 0;
-		char escolha;
+		int escolha;
 
 		Scanner ler = new Scanner(System.in);
 
@@ -236,23 +221,23 @@ public class JogoForca {
 
 		do {
 			System.out.print(" Escolha uma opção(1-4): ");
-			escolha = ler.next().charAt(0);
+			escolha = ler.nextInt();
 			System.out.print("\n");
 
 			switch (escolha) {
-			case '1':
+			case 1:
 				Opcao11();
 				repeat = 0;
 				break;
-			case '2':
+			case 2:
 				Opcao12();
 				repeat = 0;
 				break;
-			case '3':
+			case 3:
 				Opcao13();
 				repeat = 0;
 				break;
-			case '4':
+			case 4:
 				return 0;
 			default:
 				System.out.print(" Favor inserir uma opção entre 1 e 4!\n\n");
@@ -278,13 +263,13 @@ public class JogoForca {
 
 		switch (BancoDados(1, 0, tema.toUpperCase(), null)) {
 		case 0:
-			System.out.print("  Tema cadastrado com sucesso!\n");
+			System.out.print("  Tema cadastrado com sucesso!\n ");
 			break;
 		case 1:
 			System.out.print("  Tema ja existente! \n");
 			break;
 		case 2:
-			System.out.print("  Capacidade maxima de temas excedida, operação não realizada! \n");
+			System.out.print("  Capacidade maxima de temas excedente, operação não realizada! \n");
 			break;
 		}
 
@@ -293,37 +278,17 @@ public class JogoForca {
 	// EXCLUIR TEMA
 	public static void Opcao12() {
 		Scanner ler = new Scanner(System.in);
-		int escolha = 0;
-		int retorno;
-		boolean validaErro = false;
+		int escolha;
 
 		System.out.print("=================================================\n\n");
 		System.out.print("               EXCLUIR TEMA\n");
 		System.out.print("-------------------------------------------------\n\n");
-		retorno = BancoDados(3, 0, null, null);
-		switch (retorno) {
-		case -1:
-			System.out.print("  Não existem temas cadastrados!\n\n");
-			break;
-		default: {
+		switch (BancoDados(3, 0, null, null)) {
+		case 0: {
 			System.out.print("-------------------------------------------------\n\n");
-			System.out.print("  Escolha o numero do tema que deseja excluir: ");
-
-			do {
-				if (ler.hasNextInt()) {
-					escolha = ler.nextInt();
-					System.out.print("\n");
-
-					if (escolha <= retorno && escolha > 0)
-						validaErro = true;
-					else
-						System.out.print("  Favor escolher uma opção de 1 a " + retorno + "\n  R: ");
-				} else {
-					System.out.print("  Favor inserir um valor numérico! \n");
-					System.out.print("  R: ");
-					ler.nextLine();
-				}
-			} while (!validaErro);
+			System.out.print("  Escolha o tema que deseja excluir: ");
+			escolha = ler.nextInt();
+			System.out.print("\n");
 
 			switch (BancoDados(4, escolha, null, null)) {
 			case 0:
@@ -335,6 +300,9 @@ public class JogoForca {
 			}
 		}
 			break;
+		case 3:
+			System.out.print("  Não existem temas cadastrados!\n\n ");
+			break;
 		}
 	}
 
@@ -343,10 +311,9 @@ public class JogoForca {
 
 		Scanner ler = new Scanner(System.in);
 		String tema;
-		char escolha = '0';
-		boolean validaErro = false;
+		int escolha = 0;
 
-		while (escolha != '2') {
+		while (escolha != 2) {
 			int validador = 0;
 			System.out.print("=================================================\n\n");
 			System.out.print("                  BUSCAR TEMAS\n");
@@ -357,42 +324,45 @@ public class JogoForca {
 
 			switch (BancoDados(5, 0, tema.toUpperCase(), null)) {
 			case 0:
-
+				while (validador == 0) {
+					System.out.print("\n\n  Deseja buscar novamente? \n\n ");
+					System.out.print("  1- Sim \n ");
+					System.out.print("  2- Não \n\n ");
+					System.out.print("  R:  ");
+					escolha = ler.nextInt();
+					if (escolha != 1 && escolha != 2) {
+						System.out.print("  Favor escolher entre as opções 1 e 2! \n");
+					} else {
+						validador = 1;
+					}
+				}
 				break;
 			case 5:
-				System.out.print("  Tema não encontrado!");
+				System.out.print("  Tema não encontrado! \n");
+				while (validador == 0) {
+					System.out.print("\n  Deseja buscar novamente? \n\n ");
+					System.out.print("  1- Sim \n ");
+					System.out.print("  2- Não \n\n ");
+					System.out.print("  R:  ");
+					escolha = ler.nextInt();
+					if (escolha != 1 && escolha != 2) {
+						System.out.print("  Favor escolher entre as opções 1 e 2! \n");
+					} else {
+						validador = 1;
+					}
+				}
 				break;
 			}
 
-			System.out.print("\n\n  Deseja buscar novamente? \n\n ");
-			System.out.print("  1- Sim \n ");
-			System.out.print("  2- Não \n\n ");
-			System.out.print("  R:  ");
-
-			do {
-				escolha = ler.next().charAt(0);
-
-				switch (escolha) {
-				case '1':
-					validaErro = true;
-					break;
-				case '2':
-					validaErro = true;
-					break;
-				default:
-					System.out.print("\n  Favor insererir uma opção entre 1 e 2! \n");
-					System.out.print("  R: ");
-				}
-			} while (!validaErro);
+			if (escolha != 1 && escolha != 2)
+				System.out.print("  Favor escolher entre as opções 1 e 2! \n");
 		}
 	}
 
-	// ==============================================
 	// GERENCIAR PALAVRAS
 	public static int Opcao2() {
 		int repeat = 0;
-		char escolha = '0';
-		boolean validaErro = false;
+		int escolha;
 
 		Scanner ler = new Scanner(System.in);
 
@@ -405,32 +375,31 @@ public class JogoForca {
 		System.out.print("  4- Voltar ao Menu\n\n");
 		System.out.print("-------------------------------------------------\n\n");
 
-		System.out.print("  Escolha uma opção(1-4): ");
-
 		do {
-			escolha = ler.next().charAt(0);
+			System.out.print(" Escolha uma opção(1-4): ");
+			escolha = ler.nextInt();
+			System.out.print("\n");
 
 			switch (escolha) {
-			case '1':
-				validaErro = true;
+			case 1:
 				Opcao21();
+				repeat = 0;
 				break;
-			case '2':
-				validaErro = true;
+			case 2:
 				Opcao22();
+				repeat = 0;
 				break;
-			case '3':
-				validaErro = true;
+			case 3:
 				Opcao23();
+				repeat = 0;
 				break;
-			case '4':
-				validaErro = true;
-				break;
+			case 4:
+				return 0;
 			default:
-				System.out.print("\n  Favor insererir uma opção entre 1 e 4! \n");
-				System.out.print("  R: ");
+				System.out.print(" Favor inserir uma opção entre 1 e 4!\n\n");
+				repeat = 1;
 			}
-		} while (!validaErro);
+		} while (repeat == 1);
 
 		return 0;
 	}
@@ -440,38 +409,16 @@ public class JogoForca {
 
 		Scanner ler = new Scanner(System.in);
 		String palavra;
-		int escolha = 0;
-		boolean validaErro = false;
-		int retorno;
+		int escolha;
 
 		System.out.print("=================================================\n\n");
 		System.out.print("               CADASTRAR PALAVRA\n");
 		System.out.print("-------------------------------------------------\n\n");
-		retorno = BancoDados(3, 0, null, null);
-		switch (retorno) {
-		case -1:
-			System.out.print("  Não existem temas cadastrados!\n\n ");
-			break;
-		default: {
+		switch (BancoDados(3, 0, null, null)) {
+		case 0: {
 			System.out.print("-------------------------------------------------\n\n");
 			System.out.print("  Escolha o tema que deseja cadastrar a palavra: ");
-
-			do {
-				if (ler.hasNextInt()) {
-					escolha = ler.nextInt();
-					System.out.print("\n");
-
-					if (escolha <= retorno && escolha > 0)
-						validaErro = true;
-					else
-						System.out.print("  Favor escolher uma opção de 1 a " + retorno + "\n  R: ");
-				} else {
-					ler.nextLine();
-					System.out.print("  Favor inserir um valor numérico! \n");
-					System.out.print("  R: ");
-				}
-			} while (!validaErro);
-
+			escolha = ler.nextInt();
 			System.out.print("\n");
 
 			System.out.print("  Digite a palavra que deseja cadastrar: ");
@@ -480,16 +427,19 @@ public class JogoForca {
 
 			switch (BancoDados(2, escolha, null, palavra.toUpperCase())) {
 			case 0:
-				System.out.print("  Palavra cadastrado com sucesso!\n");
+				System.out.print("  Palavra cadastrado com sucesso!\n ");
 				break;
 			case 1:
-				System.out.print("  Palavra ja existente!\n");
+				System.out.print("  Palavra ja existente!\n ");
 				break;
 			case 2:
-				System.out.print("  Capacidade maxima de palavras excedida, operação não realizada!\n");
+				System.out.print("  Capacidade maxima de palavras excedente, operação não realizada! ");
 				break;
 			}
 		}
+			break;
+		case 3:
+			System.out.print("  Não existem temas cadastrados!\n\n ");
 			break;
 		}
 
@@ -586,46 +536,24 @@ public class JogoForca {
 		}
 	}
 
-	// =============================================
 	// JOGAR
 	public static int Opcao3() {
-		int escolha = 0;
+		int tema;
 		int palavra;
-		int retorno;
-		boolean validaErro = false;
 
 		Scanner ler = new Scanner(System.in);
 
 		System.out.print("=================================================\n\n");
 		System.out.print("                       JOGAR\n");
 		System.out.print("-------------------------------------------------\n\n");
-		retorno = BancoDados(3, 0, null, null);
-		switch (retorno) {
-		case -1: {
-			System.out.print("  Não existem temas cadastrados!\n\n ");
-		}
-			break;
-		default: {
+		switch (BancoDados(3, 0, null, null)) {
+		case 0: {
 			System.out.print("-------------------------------------------------\n\n");
 			System.out.print("  Escolha o tema que deseja jogar: ");
+			tema = ler.nextInt();
+			System.out.print("\n");
 
-			do {
-				if (ler.hasNextInt()) {
-					escolha = ler.nextInt();
-					System.out.print("\n");
-
-					if (escolha <= retorno && escolha > 0)
-						validaErro = true;
-					else
-						System.out.print("  Favor escolher uma opção de 1 a " + retorno + "\n  R: ");
-				} else {
-					ler.nextLine();
-					System.out.print("  Favor inserir um valor numérico! \n");
-					System.out.print("  R: ");
-				}
-			} while (!validaErro);
-
-			palavra = BancoDados(8, escolha, null, null);
+			palavra = BancoDados(8, tema, null, null);
 
 			switch (palavra) {
 			case -1: {
@@ -634,9 +562,13 @@ public class JogoForca {
 				break;
 
 			default: {
-				Opcao31(palavra, escolha - 1);
+				Opcao31(palavra, tema - 1);
 			}
 			}
+		}
+			break;
+		case 3: {
+			System.out.print("  Não existem temas cadastrados!\n\n ");
 		}
 			break;
 		}
@@ -650,7 +582,7 @@ public class JogoForca {
 		int tamString = palavraChave.length();
 		String palavraAdivinhada = "";
 
-		int escolha = 0;
+		char escolha = 0;
 
 		for (int i = 0; i < tamString; i++) {
 			if (palavraChave.charAt(i) == ' ') {
@@ -767,21 +699,20 @@ public class JogoForca {
 
 		}
 
+
 		try {
-			escolha = ler.nextInt();
-			System.out.print(" Escolha: " + escolha + "\n\n");
-			validador = 1;
+			escolha = ler.next().charAt(0);
+			
 		} catch (Exception erro) {
-			System.out.print(" Erro: " + erro + "\n Você será redirecionado ao menu! \n\n");
+			System.out.print(" Erro: " + erro + "\n");
 		}
 
-		if (escolha == 1)
+		if (escolha == '1')
 			Opcao3();
 	}
 
-	// ==============================================
 	// ABASTECER MATRIZ COM TEMAS E PALAVRAS
-	public static void Opcao5() {
+	public static void Opcao10() {
 
 		matrizGeral[0][0] = "ANIMAIS";
 
@@ -913,39 +844,8 @@ public class JogoForca {
 		matrizGeral[9][9] = "BERLIM";
 		matrizGeral[9][10] = "PRETÓRIA";
 
-		System.out.print("\n  Jogo abastecido com sucesso!!\n\n");
-
 	}
 
-	// ==============================================
-	// ENCHER A MATRIZ
-	public static void teste() {
-
-		for (int a = 0; a < MAX - 1; a++)
-			for (int j = 0; j < MAX; j++) {
-				String linha = "";
-				linha += a;
-				String coluna = "";
-				coluna += j;
-				String valor = "";
-				valor += (linha + coluna);
-				matrizGeral[a][j] = valor;
-			}
-
-	}
-
-	// PRINTA A MATRIZ
-	public static void print() {
-		System.out.print("\n\n");
-		for (int a = 0; a < MAX - 1; a++) {
-			System.out.print("\n" + " " + (a + 1) + "- " + matrizGeral[a][0] + "| ");
-			for (int j = 1; j < MAX; j++)
-				System.out.print(" " + (j) + "- " + matrizGeral[a][j] + " / ");
-		}
-		System.out.print("\n\n");
-	}
-
-	// ==============================================
 	// DESENHO DOS BONECOS
 	public static void Boneco1() {
 		System.out.print("\n\n");
