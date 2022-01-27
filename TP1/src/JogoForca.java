@@ -985,7 +985,7 @@ public class JogoForca {
 		matrizGeral[0][6] = "GALINHA";
 		matrizGeral[0][7] = "MORCEGO";
 		matrizGeral[0][8] = "LEÃO";
-		matrizGeral[0][9] = "MACACO ";
+		matrizGeral[0][9] = "MACACO";
 		matrizGeral[0][10] = "COBRA";
 
 		matrizGeral[1][0] = "VEÍCULOS";
@@ -998,7 +998,7 @@ public class JogoForca {
 		matrizGeral[1][6] = "HELICÓPTERO";
 		matrizGeral[1][7] = "BICICLETA";
 		matrizGeral[1][8] = "PATINETE";
-		matrizGeral[1][9] = "PATINS ";
+		matrizGeral[1][9] = "PATINS";
 		matrizGeral[1][10] = "MOTO";
 
 		matrizGeral[2][0] = "LUGARES";
@@ -1104,6 +1104,8 @@ public class JogoForca {
 		matrizGeral[9][8] = "CAMBERRA";
 		matrizGeral[9][9] = "BERLIM";
 		matrizGeral[9][10] = "PRETÓRIA";
+		
+		// By: Missamani
 	}
 
 	// ==============================================
