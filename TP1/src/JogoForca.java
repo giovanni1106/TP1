@@ -336,7 +336,8 @@ public class JogoForca {
 				System.out.print(" Tema excluido com sucesso!\n");
 				break;
 			case 4:
-				System.out.print(" Não foi possível excluir o tema.\n Verifique se existem palavras cadastradas nesse tema.\n");
+				System.out.print(
+						" Não foi possível excluir o tema.\n Verifique se existem palavras cadastradas nesse tema.\n");
 				break;
 			}
 		}
@@ -490,7 +491,33 @@ public class JogoForca {
 			System.out.print(" Digite a palavra que deseja cadastrar: ");
 			ler.nextLine();
 			palavra = ler.nextLine();
+			palavra = palavra.toUpperCase();
 			System.out.print("\n");
+			int tamPalavra = palavra.length();
+			int palavraValida = 0;
+
+			if (tamPalavra <= 1) {
+				System.out.print(" Favor inserir uma palavra com mais de uma letra!\n");
+				break;
+			}
+
+			for (int i = 0; i < tamPalavra; i++) {
+				if (palavra.charAt(i) >= 65 && palavra.charAt(i) <= 90
+						|| (palavra.charAt(i) >= 48 && palavra.charAt(i) <= 57)
+						|| (palavra.charAt(i) == 'Ã' || palavra.charAt(i) == 'Á' || palavra.charAt(i) == 'À'
+								|| palavra.charAt(i) == 'Â' || palavra.charAt(i) == 'É' || palavra.charAt(i) == 'Ê'
+								|| palavra.charAt(i) == 'Í' || palavra.charAt(i) == 'Ç' || palavra.charAt(i) == 'Ô'
+								|| palavra.charAt(i) == 'Ó' || palavra.charAt(i) == 'Õ' || palavra.charAt(i) == 'Ú'
+								|| palavra.charAt(i) == ' ' || palavra.charAt(i) == '-')) {
+
+				} else
+					palavraValida = 1;
+			}
+			if (palavraValida == 1) {
+				System.out.println("\n Palavra inválida!!\n");
+				break;
+			} else
+				System.out.println("\n Sua palavra é: " + palavra);
 
 			switch (Operador(2, escolha, null, palavra.toUpperCase())) {
 			case 0:
@@ -506,7 +533,6 @@ public class JogoForca {
 		}
 			break;
 		}
-
 	}
 
 	// EXCLUIR PALAVRA
@@ -640,7 +666,8 @@ public class JogoForca {
 		}
 			break;
 		default: {
-			System.out.print("\n Obs: Caso digite mais de uma letra em conjunto,\n o programa assumirá sempre a primeira letra\n");
+			System.out.print(
+					"\n Obs: Caso digite mais de uma letra em conjunto,\n o programa assumirá sempre a primeira letra\n");
 			System.out.print("-------------------------------------------------\n\n");
 			System.out.print(" Escolha o tema que deseja jogar: ");
 
@@ -763,7 +790,7 @@ public class JogoForca {
 				if (letrasUsadas.indexOf(letra) >= 0) {
 					System.out.print("\n Letra ja utilizada!\n\n");
 					tentativas = tentativas - 1;
-				} else if (letra >= 65 && letra <= 90 || (letra == 'Ã' || letra == 'Á' || letra == 'À' || letra == 'Â'
+				} else if (letra >= 65 && letra <= 90 || (letra >= 48 && letra <= 57) || (letra == 'Ã' || letra == 'Á' || letra == 'À' || letra == 'Â'
 						|| letra == 'É' || letra == 'Ê' || letra == 'Í' || letra == 'Ç' || letra == 'Ô' || letra == 'Ó'
 						|| letra == 'Õ' || letra == 'Ú')) {
 					letrasUsadas += letra;
@@ -861,7 +888,7 @@ public class JogoForca {
 		matrizGeral[1][3] = "ONIBUS";
 		matrizGeral[1][4] = "SUBMARINO";
 		matrizGeral[1][5] = "NAVIO";
-		matrizGeral[1][6] = "HELICOPTERO";
+		matrizGeral[1][6] = "HELICÓPTERO";
 		matrizGeral[1][7] = "BICICLETA";
 		matrizGeral[1][8] = "PATINETE";
 		matrizGeral[1][9] = "PATINS ";
