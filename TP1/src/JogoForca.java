@@ -1,6 +1,5 @@
 import java.util.Scanner;
 import java.util.Random;
-import java.util.Arrays;
 
 public class JogoForca {
 
@@ -355,7 +354,7 @@ public class JogoForca {
 			System.out.print("=================================================\n\n");
 			System.out.print("                  BUSCAR TEMAS\n");
 			System.out.print("-------------------------------------------------\n\n");
-			System.out.print("  Digite o tema que deseja buscar: ");
+			System.out.print(" Digite o tema que deseja buscar: ");
 			tema = ler.next();
 			System.out.print("\n");
 
@@ -403,7 +402,6 @@ public class JogoForca {
 	// ==============================================
 	// GERENCIAR PALAVRAS
 	public static int Opcao2() {
-		int repeat = 0;
 		char escolha = '0';
 		boolean validaErro = false;
 
@@ -784,8 +782,6 @@ public class JogoForca {
 				}
 			}
 		}
-
-		int validador = 0;
 
 		if (ganhou == 1) {
 			System.out.print(" Parabens!!!\n\n");
