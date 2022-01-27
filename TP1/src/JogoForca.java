@@ -416,7 +416,8 @@ public class JogoForca {
 		System.out.print("  1- Cadastrar\n");
 		System.out.print("  2- Excluir\n");
 		System.out.print("  3- Buscar\n");
-		System.out.print("  4- Voltar ao Menu\n\n");
+		System.out.print("  4- Listagem\n");
+		System.out.print("  5- Voltar ao Menu\n\n");
 		System.out.print("-------------------------------------------------\n\n");
 
 		System.out.print("  Escolha uma opção(1-4): ");
@@ -438,6 +439,10 @@ public class JogoForca {
 				Opcao23();
 				break;
 			case '4':
+				validaErro = true;
+				Opcao24();
+				break;
+			case '5':
 				validaErro = true;
 				break;
 			default:
@@ -645,6 +650,60 @@ public class JogoForca {
 		}
 	}
 
+	// LISTAGEM
+	public static void Opcao24() {
+
+		Scanner ler = new Scanner(System.in);
+		String palavra;
+
+		int escolha = 0;
+		boolean validaErro = false;
+		int tentativas = 0;
+
+		System.out.print("=================================================\n\n");
+		System.out.print("                     LISTAGEM\n");
+		System.out.print("-------------------------------------------------\n\n");
+		int retorno = Operador(3, 0, null, null);
+		switch (retorno) {
+		case -1:
+			System.out.print(" Não existem temas cadastrados!\n\n");
+			break;
+		default: {
+			System.out.print("-------------------------------------------------\n\n");
+			System.out.print(" Escolha o tema que deseja consultar: ");
+
+			do {
+				if (tentativas != 0)
+					ler.nextLine();
+				tentativas = 1;
+				if (ler.hasNextInt()) {
+					escolha = ler.nextInt();
+					System.out.print("\n");
+
+					if (escolha <= retorno && escolha > 0)
+						validaErro = true;
+					else
+						System.out.print(" Favor escolher uma opção de 1 a " + retorno + "\n R: ");
+				} else {
+					System.out.print("\n Favor inserir um valor numérico! \n");
+					System.out.print(" R: ");
+				}
+			} while (!validaErro);
+
+			if (Operador(5, 0, matrizGeral[escolha - 1][0], null) != -1) {
+				System.out.print("\n\n");
+				System.out.print(" 'ENTER' para ser redirecionado ao menu: ");
+				ler.nextLine();
+				palavra = ler.nextLine();
+				System.out.print("\n");
+			} else
+				System.out.print(" Não existem palavras cadastradas nesse tema! \n");
+
+		}
+			break;
+		}
+	}
+
 	// =============================================
 	// JOGAR
 	public static int Opcao3() {
@@ -790,9 +849,10 @@ public class JogoForca {
 				if (letrasUsadas.indexOf(letra) >= 0) {
 					System.out.print("\n Letra ja utilizada!\n\n");
 					tentativas = tentativas - 1;
-				} else if (letra >= 65 && letra <= 90 || (letra >= 48 && letra <= 57) || (letra == 'Ã' || letra == 'Á' || letra == 'À' || letra == 'Â'
-						|| letra == 'É' || letra == 'Ê' || letra == 'Í' || letra == 'Ç' || letra == 'Ô' || letra == 'Ó'
-						|| letra == 'Õ' || letra == 'Ú')) {
+				} else if (letra >= 65 && letra <= 90 || (letra >= 48 && letra <= 57)
+						|| (letra == 'Ã' || letra == 'Á' || letra == 'À' || letra == 'Â' || letra == 'É' || letra == 'Ê'
+								|| letra == 'Í' || letra == 'Ç' || letra == 'Ô' || letra == 'Ó' || letra == 'Õ'
+								|| letra == 'Ú')) {
 					letrasUsadas += letra;
 					letrasEscolhidas[tentativas] = letra;
 
